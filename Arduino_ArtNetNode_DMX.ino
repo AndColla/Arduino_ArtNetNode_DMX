@@ -5,7 +5,6 @@
  * artnet-Net: 1 byte
  * artnet-SubNet: 1 byte
  * Artnet-Universe: 1 byte
- * artnet/sACN (?): 1 bit
  * node name: 18 byte
  * node long name: 64 byte
  */
@@ -15,15 +14,11 @@
 
 #include <DMXSerial.h>
 
-byte ip[] = {10, 0, 1, 199};
-byte broadcast[] = {10, 0, 1, 255};
-byte mac[] = {0x04, 0xE9, 0xE5, 0x00, 0x69, 0xEC}; // generate new mac with local flag
-
-Artnet Artnet;
+#include "globals.h"
 
 void setup()
 {
-  Artnet.begin(mac, ip, broadcast);
+  Artnet.begin(mac, ip, subnetMask, longName, shortName);
   DMXSerial.init(DMXController);
 
   Artnet.sendArtPollReply();

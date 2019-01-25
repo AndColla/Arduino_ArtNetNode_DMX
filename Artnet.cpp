@@ -2,19 +2,23 @@
 
 Artnet::Artnet() = default;
 
-void Artnet::begin(byte mac[], byte ip[], byte _broadcast[]) {
+void Artnet::begin(byte mac[], byte ip[], byte subnetMask[]) {
   Ethernet.begin(mac, ip);
   Udp.begin(ARTNET_PORT);
-  broadcast = _broadcast;
+  byte _broadcast[4];
+  for (int i = 0; i < 4; i++){
+    _broadcast[i] = (ip[i] | ~subnetMask[i]);
+  }
+  this->broadcast = _broadcast;
 }
 
-void Artnet::begin(byte mac[], byte ip[], byte _broadcast[], char _longName[64]) {
-  Artnet::begin(mac, ip, _broadcast);
+void Artnet::begin(byte mac[], byte ip[], byte subnetMask[], char _longName[64]) {
+  Artnet::begin(mac, ip, subnetMask);
   strcpy(longName, _longName);
 }
 
-void Artnet::begin(byte mac[], byte ip[], byte _broadcast[], char _longName[64], char _shortName[18]) {
-  Artnet::begin(mac, ip, _broadcast, _longName);
+void Artnet::begin(byte mac[], byte ip[], byte subnetMask[], char _longName[64], char _shortName[18]) {
+  Artnet::begin(mac, ip, subnetMask, _longName);
   strcpy(shortName, _shortName);
 }
 
