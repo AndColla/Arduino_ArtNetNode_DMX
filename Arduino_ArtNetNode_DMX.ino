@@ -18,7 +18,7 @@
 
 void setup()
 {
-  Artnet.begin(mac, ip, subnetMask, longName, shortName);
+  Artnet.begin(mac, ip, subnetMask, artnetNet, artnetSubnet, artnetUniverse, longName, shortName);
   DMXSerial.init(DMXController);
 
   Artnet.sendArtPollReply();

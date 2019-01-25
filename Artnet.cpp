@@ -2,23 +2,28 @@
 
 Artnet::Artnet() = default;
 
-void Artnet::begin(byte mac[], byte ip[], byte subnetMask[]) {
+void Artnet::begin(byte mac[], byte ip[], byte subnetMask[], byte _artnetNet, byte _artnetSubnet, byte _artnetUniverse) {
   Ethernet.begin(mac, ip);
   Udp.begin(ARTNET_PORT);
+  
   byte _broadcast[4];
   for (int i = 0; i < 4; i++){
     _broadcast[i] = (ip[i] | ~subnetMask[i]);
   }
   this->broadcast = _broadcast;
+
+  this->artnetNet = _artnetNet;
+  this->artnetSubnet = _artnetSubnet;
+  this->artnetUniverse = _artnetUniverse;
 }
 
-void Artnet::begin(byte mac[], byte ip[], byte subnetMask[], char _longName[64]) {
-  Artnet::begin(mac, ip, subnetMask);
+void Artnet::begin(byte mac[], byte ip[], byte subnetMask[], byte _artnetNet, byte _artnetSubnet, byte _artnetUniverse, char _longName[64]) {
+  Artnet::begin(mac, ip, subnetMask, _artnetNet, _artnetSubnet, _artnetUniverse);
   strcpy(longName, _longName);
 }
 
-void Artnet::begin(byte mac[], byte ip[], byte subnetMask[], char _longName[64], char _shortName[18]) {
-  Artnet::begin(mac, ip, subnetMask, _longName);
+void Artnet::begin(byte mac[], byte ip[], byte subnetMask[], byte _artnetNet, byte _artnetSubnet, byte _artnetUniverse, char _longName[64], char _shortName[18]) {
+  Artnet::begin(mac, ip, subnetMask, _artnetNet, _artnetSubnet, _artnetUniverse, _longName);
   strcpy(shortName, _shortName);
 }
 
@@ -47,6 +52,15 @@ uint16_t Artnet::read(uint8_t data[]) {
       uint8_t sequence = artnetPacketHeader[12];
       if (sequence < lastSequence && lastSequence - sequence < 0x80 ) {
         return ERR_OLD_PACKET;
+      }
+
+      // Check universe
+      if (
+        artnetPacketHeader[15] != this->artnetNet ||
+        (artnetPacketHeader[14] >> 4) != this->artnetSubnet || 
+        (artnetPacketHeader[14] & 0xF) != this->artnetUniverse
+        ) {
+        return ERR_WRONG_UNIVERSE;
       }
 
       uint16_t dmxDataLength = artnetPacketHeader[17] | artnetPacketHeader[16] << 8;

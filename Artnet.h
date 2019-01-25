@@ -18,6 +18,7 @@
 #define ERR_NOT_ARTNET 0x1001
 #define ERR_NOT_EXISTING_OPCODE 0x1002
 #define ERR_OLD_PACKET 0x1003
+#define ERR_WRONG_UNIVERSE 0x1004
 
 #define MAX_ARTNET_BUFFER 530 // 18 (Art-Net Headers) + 512 (DMX Channels)
 #define ARTNET_ID "Art-Net\0"
@@ -28,9 +29,9 @@ class Artnet {
   public:
     Artnet();
 
-    void begin(byte mac[], byte ip[], byte _broadcast[]);
-    void begin(byte mac[], byte ip[], byte _broadcast[], char _longName[64]);
-    void begin(byte mac[], byte ip[], byte _broadcast[], char _longName[64], char _shortName[18]);
+    void begin(byte mac[], byte ip[], byte subnetMask[], byte _artnetNet, byte _artnetSubnet, byte _artnetUniverse);
+    void begin(byte mac[], byte ip[], byte subnetMask[], byte _artnetNet, byte _artnetSubnet, byte _artnetUniverse, char _longName[64]);
+    void begin(byte mac[], byte ip[], byte subnetMask[], byte _artnetNet, byte _artnetSubnet, byte _artnetUniverse, char _longName[64], char _shortName[18]);
     uint16_t read(uint8_t data[]);
     void sendArtPollReply();
 
@@ -44,6 +45,10 @@ class Artnet {
 
     uint8_t artnetPacketHeader[ARTNET_DMX_START];
     uint8_t lastSequence;
+
+    byte artnetNet = 0;
+    byte artnetSubnet = 0;
+    byte artnetUniverse = 0;
 };
 
 #endif
