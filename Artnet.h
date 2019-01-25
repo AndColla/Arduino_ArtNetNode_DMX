@@ -32,6 +32,9 @@ class Artnet {
     void begin(byte mac[], byte ip[], byte subnetMask[], byte _artnetNet, byte _artnetSubnet, byte _artnetUniverse);
     void begin(byte mac[], byte ip[], byte subnetMask[], byte _artnetNet, byte _artnetSubnet, byte _artnetUniverse, char _longName[64]);
     void begin(byte mac[], byte ip[], byte subnetMask[], byte _artnetNet, byte _artnetSubnet, byte _artnetUniverse, char _longName[64], char _shortName[18]);
+    void setArtnetNet(byte _artnetNet);
+    void setArtnetSubnet(byte _artnetSubnet);
+    void setArtnetUniverse(byte _artnetUniverse);
     uint16_t read(uint8_t data[]);
     void sendArtPollReply();
 

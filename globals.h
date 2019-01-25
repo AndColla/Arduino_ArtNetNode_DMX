@@ -10,3 +10,4 @@ char shortName[18] = "Arduino Art-Net";
 char longName[64] = "Arduino Art-Net Node";
 
 Artnet Artnet;
+EthernetServer WebServer(80);

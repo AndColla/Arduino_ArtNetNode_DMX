@@ -27,6 +27,18 @@ void Artnet::begin(byte mac[], byte ip[], byte subnetMask[], byte _artnetNet, by
   strcpy(shortName, _shortName);
 }
 
+void Artnet::setArtnetNet(byte _artnetNet) {
+  this->artnetNet = _artnetNet;
+}
+
+void Artnet::setArtnetSubnet(byte _artnetSubnet) {
+  this->artnetSubnet = _artnetSubnet;
+}
+
+void Artnet::setArtnetUniverse(byte _artnetUniverse) {
+  this->artnetUniverse = _artnetUniverse;
+}
+
 uint16_t Artnet::read(uint8_t data[]) {
 
   uint16_t packetSize;
@@ -54,7 +66,7 @@ uint16_t Artnet::read(uint8_t data[]) {
         return ERR_OLD_PACKET;
       }
 
-      // Check universe
+      // Universe Addressing
       if (
         artnetPacketHeader[15] != this->artnetNet ||
         (artnetPacketHeader[14] >> 4) != this->artnetSubnet || 
