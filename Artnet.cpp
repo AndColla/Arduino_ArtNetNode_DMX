@@ -18,7 +18,6 @@ void Artnet::begin(byte mac[], byte ip[], byte _broadcast[], char _longName[64],
   strcpy(shortName, _shortName);
 }
 
-
 uint16_t Artnet::read(uint8_t data[]) {
 
   uint16_t packetSize;
@@ -53,78 +52,7 @@ uint16_t Artnet::read(uint8_t data[]) {
       break;
     }
     case OP_POLL: {
-      artnetArtpollReply ArtPollReply;
-
-      uint8_t id[8] = ARTNET_ID;
-      memcpy(ArtPollReply.id, id, sizeof(ArtPollReply.id));
-
-      ArtPollReply.opCode = OP_POLL_REPLY;
-
-      IPAddress localIp = Ethernet.localIP();
-      ArtPollReply.ip = static_cast<uint32_t>(localIp);
-
-      ArtPollReply.port = ARTNET_PORT;
-
-      ArtPollReply.versInfoH = 0;
-      ArtPollReply.versInfoL = 1;
-
-      ArtPollReply.netSwitch = 0;
-      ArtPollReply.subSwitch = 0;
-
-      ArtPollReply.oemHi = 0x00;
-      ArtPollReply.oem = 0xff;
-
-      ArtPollReply.ubeaVersion = 0;
-
-      ArtPollReply.status1 = 0xe0;
-
-      ArtPollReply.estaManLo = 0;
-      ArtPollReply.estaManHi = 0;
-
-      sprintf((char *)ArtPollReply.shortName, shortName);
-      sprintf((char *)ArtPollReply.longName, longName);
-
-      sprintf((char *)ArtPollReply.nodeReport, "1 Active Universe\0");
-
-      ArtPollReply.numPortsHi = 0;
-      ArtPollReply.numPortsLo = 1;
-
-      memset(ArtPollReply.portTypes, 0x80, 1); //First port is implemented
-      memset(ArtPollReply.portTypes+1, 0x00, 3); //Last 3 ports are not implemented
-
-      memset(ArtPollReply.goodInput, 0x08, 4);
-      memset(ArtPollReply.goodOutput, 0x80, 4);
-
-      // TODO: make it configurable
-      uint8_t swin[4] = {0x01,0x02,0x03,0x04};
-      uint8_t swout[4] = {0x01,0x02,0x03,0x04};
-      for(uint8_t i = 0; i < 4; i++)
-      {
-          ArtPollReply.swOut[i] = swout[i];
-          ArtPollReply.swIn[i] = swin[i];
-      }
-
-      ArtPollReply.swVideo = 0;
-      ArtPollReply.swMacro = 0;
-      ArtPollReply.swRemote = 0;
-      ArtPollReply.spare1 = 0;
-      ArtPollReply.spare2 = 0;
-      ArtPollReply.spare3 = 0;
-
-      ArtPollReply.style = 0; // TODO
-
-      // ArtPollReply.mac[6]; // TODO
-
-      ArtPollReply.bindIp = static_cast<uint32_t>(localIp);
-
-      ArtPollReply.bindIndex = 1;
-      ArtPollReply.status2 = 0x0A; //wrong status
-
-      memset(ArtPollReply.filler, 0, 26);
-
-      Udp.beginPacket(broadcast, ARTNET_PORT); //send packet to broadcast address
-      Udp.write((uint8_t *)&ArtPollReply, sizeof(ArtPollReply));
-      Udp.endPacket();
+      this->sendArtPollReply();
       break;
     }
     default:
@@ -132,4 +60,79 @@ uint16_t Artnet::read(uint8_t data[]) {
   }
 
   return opcode;
+}
+
+void Artnet::sendArtPollReply() {
+  artnetArtpollReply ArtPollReply;
+
+  uint8_t id[8] = ARTNET_ID;
+  memcpy(ArtPollReply.id, id, sizeof(ArtPollReply.id));
+
+  ArtPollReply.opCode = OP_POLL_REPLY;
+
+  IPAddress localIp = Ethernet.localIP();
+  ArtPollReply.ip = static_cast<uint32_t>(localIp);
+
+  ArtPollReply.port = ARTNET_PORT;
+
+  ArtPollReply.versInfoH = 0;
+  ArtPollReply.versInfoL = 1;
+
+  ArtPollReply.netSwitch = 0;
+  ArtPollReply.subSwitch = 0;
+
+  ArtPollReply.oemHi = 0x00;
+  ArtPollReply.oem = 0xff;
+
+  ArtPollReply.ubeaVersion = 0;
+
+  ArtPollReply.status1 = 0xe0;
+
+  ArtPollReply.estaManLo = 0;
+  ArtPollReply.estaManHi = 0;
+
+  sprintf((char *)ArtPollReply.shortName, shortName);
+  sprintf((char *)ArtPollReply.longName, longName);
+
+  sprintf((char *)ArtPollReply.nodeReport, "1 Active Universe\0");
+
+  ArtPollReply.numPortsHi = 0;
+  ArtPollReply.numPortsLo = 1;
+
+  memset(ArtPollReply.portTypes, 0x80, 1); //First port is implemented
+  memset(ArtPollReply.portTypes+1, 0x00, 3); //Last 3 ports are not implemented
+
+  memset(ArtPollReply.goodInput, 0x08, 4);
+  memset(ArtPollReply.goodOutput, 0x80, 4);
+
+  // TODO: make it configurable
+  uint8_t swin[4] = {0x01,0x02,0x03,0x04};
+  uint8_t swout[4] = {0x01,0x02,0x03,0x04};
+  for(uint8_t i = 0; i < 4; i++)
+  {
+      ArtPollReply.swOut[i] = swout[i];
+      ArtPollReply.swIn[i] = swin[i];
+  }
+
+  ArtPollReply.swVideo = 0;
+  ArtPollReply.swMacro = 0;
+  ArtPollReply.swRemote = 0;
+  ArtPollReply.spare1 = 0;
+  ArtPollReply.spare2 = 0;
+  ArtPollReply.spare3 = 0;
+
+  ArtPollReply.style = 0; // TODO
+
+  // ArtPollReply.mac[6]; // TODO
+
+  ArtPollReply.bindIp = static_cast<uint32_t>(localIp);
+
+  ArtPollReply.bindIndex = 1;
+  ArtPollReply.status2 = 0x0A; //wrong status
+
+  memset(ArtPollReply.filler, 0, 26);
+
+  Udp.beginPacket(broadcast, ARTNET_PORT); //send packet to broadcast address
+  Udp.write((uint8_t *)&ArtPollReply, sizeof(ArtPollReply));
+  Udp.endPacket();
 }

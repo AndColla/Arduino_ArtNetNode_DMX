@@ -19,19 +19,19 @@ byte ip[] = {10, 0, 1, 199};
 byte broadcast[] = {10, 0, 1, 255};
 byte mac[] = {0x04, 0xE9, 0xE5, 0x00, 0x69, 0xEC}; // generate new mac with local flag
 
-Artnet artnet;
+Artnet Artnet;
 
 void setup()
 {
-  artnet.begin(mac, ip, broadcast);
+  Artnet.begin(mac, ip, broadcast);
   DMXSerial.init(DMXController);
 
-  //TODO: Send artpoll reply
+  Artnet.sendArtPollReply();
   //TODO: Start web server
 }
 
 void loop()
 {
   uint8_t * data = DMXSerial.getBuffer() + 1;
-  artnet.read(data);
+  Artnet.read(data);
 }

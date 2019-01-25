@@ -32,6 +32,7 @@ class Artnet {
     void begin(byte mac[], byte ip[], byte _broadcast[], char _longName[64]);
     void begin(byte mac[], byte ip[], byte _broadcast[], char _longName[64], char _shortName[18]);
     uint16_t read(uint8_t data[]);
+    void sendArtPollReply();
 
   private:
     EthernetUDP Udp;
