@@ -1,14 +1,3 @@
-/*
- * EEPROM
- * ip: 4 byte
- * subnet-mask: 4 byte
- * artnet-Net: 1 byte
- * artnet-SubNet: 1 byte
- * Artnet-Universe: 1 byte
- * node name: 18 byte
- * node long name: 64 byte
- */
-
 #include "Artnet.h"
 #include "Packets.h"
 
