@@ -12,21 +12,30 @@
 #include "Artnet.h"
 #include "Packets.h"
 
-#include <DMXSerial.h>
+#include <WebServer.h>
+#include <Conceptinetics.h>
 
 #include "globals.h"
 
 void setup()
 {
+  // disable the SD card by switching pin 4 high
+  // not using the SD card in this program, but if an SD card is left in the socket,
+  // it may cause a problem with accessing the Ethernet chip, unless disabled
+  pinMode(4, OUTPUT);
+  digitalWrite(4, HIGH);
+  
   Artnet.begin(mac, ip, subnetMask, artnetNet, artnetSubnet, artnetUniverse, longName, shortName);
-  DMXSerial.init(DMXController);
+
+  DMXMaster.enable();
 
   Artnet.sendArtPollReply();
-  //TODO: Start web server
+  startWebserver();
 }
 
 void loop()
 {
-  uint8_t * data = DMXSerial.getBuffer() + 1;
+  uint8_t * data = DMXMaster.getBuffer().getPointer();
   Artnet.read(data);
+  webserver.processConnection();
 }
