@@ -9,7 +9,6 @@
             }
 
             header {
-                width: 100%;
                 padding: 20px;
                 background: rgb(45,45,55);
                 margin-bottom: 50px;
@@ -77,29 +76,17 @@
             .button {
                 margin-top: 20px;
                 margin-bottom: 0px;
-                padding: 10px 180px;
+                padding: 10px auto;
+                width: 380px;
                 font-weight: 700;
                 font-size: 18px;
                 background: #4CAF50;
                 color: white;
+                cursor: pointer;
             }
 
             .spacer {
                 margin-left: 20px;
-            }
-
-            .rebootContainer {
-                width: 65%;
-                margin: auto;
-            }
-
-            .reboot {
-                font-weight: 700;
-                background: #F44336;
-                color: white;
-                font-size: 20px;
-                margin-top: 20px;
-                padding: 15px 50px;
             }
 
             .right {
@@ -126,64 +113,55 @@
         </header>
         <div class='container'>
             <h2>IP Configuration</h3>
-            <form method='post'>
-                <table>
-                    <tr>
-                        <td class='right'>IP Address:</td>
-                        <td class='left'>
-                            <div class='ipInput'>
-                                <input type='number' class='ipByte' name='ip0' id='ip0' min='0' max='255'>
-                                <span class='ipDot'>.</span>
-                                <input type='number' class='ipByte' name='ip1' id='ip1' min='0' max='255'>
-                                <span class='ipDot'>.</span>
-                                <input type='number' class='ipByte' name='ip2' id='ip2' min='0' max='255'>
-                                <span class='ipDot'>.</span>
-                                <input type='number' class='ipByte' name='ip3' id='ip3' min='0' max='255'>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class='right'>Subnet Mask:</td>
-                        <td class='left'>
-                            <div class='ipInput'>
-                                <input type='number' class='ipByte' name='mask0' id='mask0' min='0' max='255'>
-                                <span class='ipDot'>.</span>
-                                <input type='number' class='ipByte' name='maks1' id='mask1' min='0' max='255'>
-                                <span class='ipDot'>.</span>
-                                <input type='number' class='ipByte' name='mask2' id='mask2' min='0' max='255'>
-                                <span class='ipDot'>.</span>
-                                <input type='number' class='ipByte' name='mask3' id='mask3' min='0' max='255'>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class='right'>Mac Address:</td>
-                        <td class='left' id='macAddress'></td>
-                    </tr>
-                </table>
-                <input type='submit' name='ip' class='button' value='Save'>
-            </form>
+            <table>
+                <tr>
+                    <td class='right'>IP Address:</td>
+                    <td class='left'>
+                        <div class='ipInput'>
+                            <input type='number' class='ipByte' name='ip0' id='ip0' min='0' max='255'>
+                            <span class='ipDot'>.</span>
+                            <input type='number' class='ipByte' name='ip1' id='ip1' min='0' max='255'>
+                            <span class='ipDot'>.</span>
+                            <input type='number' class='ipByte' name='ip2' id='ip2' min='0' max='255'>
+                            <span class='ipDot'>.</span>
+                            <input type='number' class='ipByte' name='ip3' id='ip3' min='0' max='255'>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='right'>Subnet Mask:</td>
+                    <td class='left'>
+                        <div class='ipInput'>
+                            <input type='number' class='ipByte' name='mask0' id='mask0' min='0' max='255'>
+                            <span class='ipDot'>.</span>
+                            <input type='number' class='ipByte' name='maks1' id='mask1' min='0' max='255'>
+                            <span class='ipDot'>.</span>
+                            <input type='number' class='ipByte' name='mask2' id='mask2' min='0' max='255'>
+                            <span class='ipDot'>.</span>
+                            <input type='number' class='ipByte' name='mask3' id='mask3' min='0' max='255'>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='right'>Mac Address:</td>
+                    <td class='left' id='macAddress'></td>
+                </tr>
+            </table>
+            <input type='submit' class='button' value='Save and Reboot' onclick='submitIpSettings()'>
         </div>
         <div class='container'>
             <h2>Art-Net Configuration</h3>
-            <form method='post'>
-                <div>
-                    <span>Net:</span>
-                    <input type='number' class='ipByte' name='net' id='net' min='0' max='255'>
-                    <span class='spacer'></span>
-                    <span>Subnet:</span>
-                    <input type='number' class='ipByte' name='subnet' id='subnet' min='0' max='255'>
-                    <span class='spacer'></span>
-                    <span>Universe:</span>
-                    <input type='number' class='ipByte' name='universe' id='universe' min='0' max='255'>
-                </div>
-                <input type='submit' name='artnet' class='button' value='Save'>
-            </form>
-        </div>
-        <div class='rebootContainer'>
-            <form method='post'>
-                <input type='submit' name='reboot' class='reboot' value='Reboot Device'>
-            </form>
+            <div>
+                <span>Net:</span>
+                <input type='number' class='ipByte' name='net' id='net' min='0' max='255'>
+                <span class='spacer'></span>
+                <span>Subnet:</span>
+                <input type='number' class='ipByte' name='subnet' id='subnet' min='0' max='255'>
+                <span class='spacer'></span>
+                <span>Universe:</span>
+                <input type='number' class='ipByte' name='universe' id='universe' min='0' max='255'>
+            </div>
+            <input type='submit' name='artnet' class='button' value='Save' onclick='submitArtnetSettings()'>
         </div>
         <script>
         (function() {
@@ -213,6 +191,37 @@
             xhttp.open('GET', 'json', true);
             xhttp.send();
         })();
+
+        function submitIpSettings() {
+            var ipSettings = '';
+
+            for (var i = 0; i < 4; i++) {
+                ipSettings += 'ip' + i + '=' + document.getElementById('ip'+i).value + '&';
+            }
+
+            for (var i = 0; i < 3; i++) {
+                ipSettings += 'mask' + i + '=' + document.getElementById('mask'+i).value + '&';
+            }
+            ipSettings += 'mask3=' + document.getElementById('mask3').value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/ipPost');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(ipSettings);
+        }
+
+        function submitArtnetSettings() {
+            var artnetSettings = '';
+
+            artnetSettings += 'net=' + document.getElementById('net').value + '&';
+            artnetSettings += 'subnet=' + document.getElementById('subnet').value + '&';
+            artnetSettings += 'universe=' + document.getElementById('universe').value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/artnetPost');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(artnetSettings));
+        }
         </script>
     </body>
 </html>

@@ -1,6 +1,8 @@
 bool loadSettings() {  
   // Check if we have previous saves.  If not, return false
   if(EEPROM.read(200) != 'O' || EEPROM.read(201) != 'K') {
+    saveIpSettings();
+    saveArtnetSettings();
     return false;
   }
   
