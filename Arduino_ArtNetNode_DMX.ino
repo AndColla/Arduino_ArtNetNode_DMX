@@ -12,6 +12,8 @@
 #include "Artnet.h"
 #include "Packets.h"
 
+#define WEBDUINO_FAVICON_DATA ""
+
 #include <WebServer.h>
 #include <Conceptinetics.h>
 #include <EEPROM.h>
