@@ -7,6 +7,4 @@ pin 1 (tx)    pin 4(DI)
 pin 2         pin 2 + pin 3 (RE + DE)
 ```
 ## TODO
-- Use the EEPROM memory to store the settigs of the node
-- Create a web interface to change the settings
 - Clean up the code
