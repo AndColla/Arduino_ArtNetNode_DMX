@@ -51,7 +51,7 @@ uint16_t Artnet::read(uint8_t data[]) {
   Udp.read(artnetPacketHeader, ARTNET_DMX_START);
 
   // Check that packet ID is "Art-Net" else ignore
-  for (byte i = 0 ; i < 9 ; i++) {
+  for (byte i = 0 ; i < 8 ; i++) {
     if (artnetPacketHeader[i] != ARTNET_ID[i]) {
       return ERR_NOT_ARTNET;
     }

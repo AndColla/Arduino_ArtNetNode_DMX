@@ -1,10 +1,10 @@
-#include "Artnet.h"
-#include "Packets.h"
+#include "src/Artnet/Artnet.h"
+#include "src/Artnet/Packets.h"
+#include "src/Conceptinetics/Conceptinetics.h"
 
 #define WEBDUINO_FAVICON_DATA ""
 
 #include <WebServer.h>
-#include <Conceptinetics.h>
 #include <EEPROM.h>
 
 #include "globals.h"
@@ -24,10 +24,10 @@ void setup() {
   
   Artnet.begin(mac, ip, subnetMask, artnetNet, artnetSubnet, artnetUniverse, longName, shortName);
 
+  Artnet.sendArtPollReply();
+
   DMXMaster.enable();
 
-  Artnet.sendArtPollReply();
-  
   startWebserver();
 }
 
