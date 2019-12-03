@@ -1,6 +1,6 @@
 #include "src/Artnet/Artnet.h"
 #include "src/Artnet/Packets.h"
-#include "src/Conceptinetics/Conceptinetics.h"
+#include "src/Dmx/Dmx.h"
 
 #define WEBDUINO_FAVICON_DATA ""
 
@@ -14,25 +14,29 @@ void softwareReset() {
 }
 
 void setup() {
-  // disable the SD card by switching pin 4 high
-  // not using the SD card in this program, but if an SD card is left in the socket,
-  // it may cause a problem with accessing the Ethernet chip, unless disabled
+  pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
-  digitalWrite(4, HIGH);
-
-  loadSettings();
+  pinMode(5, OUTPUT);
+  //loadSettings();
   
   Artnet.begin(mac, ip, subnetMask, artnetNet, artnetSubnet, artnetUniverse, longName, shortName);
 
   Artnet.sendArtPollReply();
 
-  DMXMaster.enable();
+  DMX_Master_0.enable();
+  DMX_Master_1.enable();
+  DMX_Master_0.setChannelRange ( 1, 512, 127 );
+  DMX_Master_1.setChannelRange ( 1, 512, 127 );
 
   startWebserver();
+  digitalWrite(3, HIGH);
+  digitalWrite(4, HIGH);
+  digitalWrite(5, HIGH);
 }
 
 void loop()  {
-  uint8_t * data = DMXMaster.getBuffer().getPointer();
-  Artnet.read(data);
+  uint8_t * data_0 = DMX_Master_0.getBuffer().getPointer();
+  //uint8_t * data_1 = DMX_Master_1.getBuffer().getPointer();
+  Artnet.read(data_0);
   webserver.processConnection();
 }

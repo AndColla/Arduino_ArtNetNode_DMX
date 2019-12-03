@@ -69,8 +69,8 @@ uint16_t Artnet::read(uint8_t data[]) {
       // Universe Addressing
       if (
         artnetPacketHeader[15] != this->artnetNet ||
-        (artnetPacketHeader[14] >> 4) != this->artnetSubnet || 
-        (artnetPacketHeader[14] & 0xF) != this->artnetUniverse
+        (artnetPacketHeader[14] >> 4) != this->artnetSubnet ||
+        artnetPacketHeader[14] & 0xF != this->artnetUniverse
         ) {
         return ERR_WRONG_UNIVERSE;
       }
@@ -127,10 +127,10 @@ void Artnet::sendArtPollReply() {
   sprintf((char *)ArtPollReply.nodeReport, "1 Active Universe\0");
 
   ArtPollReply.numPortsHi = 0;
-  ArtPollReply.numPortsLo = 1;
+  ArtPollReply.numPortsLo = 4;
 
-  memset(ArtPollReply.portTypes, 0x80, 1); //First port is implemented
-  memset(ArtPollReply.portTypes+1, 0x00, 3); //Last 3 ports are not implemented
+  memset(ArtPollReply.portTypes, 0x80, 4); //Implemented Ports
+  // memset(ArtPollReply.portTypes+1, 0x00, 3); //Last n ports are not implemented
 
   memset(ArtPollReply.goodInput, 0x08, 4);
   memset(ArtPollReply.goodOutput, 0x80, 4);
@@ -151,14 +151,16 @@ void Artnet::sendArtPollReply() {
   ArtPollReply.spare2 = 0;
   ArtPollReply.spare3 = 0;
 
-  ArtPollReply.style = 0; // TODO
+  ArtPollReply.style = 0x00; // StNode
+
+  Ethernet.MACAddress(ArtPollReply.mac);
 
   // ArtPollReply.mac[6]; // TODO
 
   ArtPollReply.bindIp = static_cast<uint32_t>(localIp);
 
-  ArtPollReply.bindIndex = 1;
-  ArtPollReply.status2 = 0x0A; //wrong status
+  ArtPollReply.bindIndex = 1; // Root Device
+  ArtPollReply.status2 = 0x0B; // check status
 
   memset(ArtPollReply.filler, 0, 26);
 
